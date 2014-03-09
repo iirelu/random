@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+<title>Pentajerk</title>
+<style>
+body {
+  text-align: center;
+}
+input[type="range"] {
+  width: 500px;
+}
+</style>
+</head>
+<body>
+
+<h2>Position</h2>
+<input type="number" value="0" id="d1">
+<input type="range" min="-100" max="100" value="0" step="0.001" id="s1">
+
+<h2>Velocity</h2>
+<input type="number" value="0" id="d2">
+<input type="range" min="-100" max="100" value="0" step="0.001" id="s2">
+
+<h2>Acceleration</h2>
+<input type="number" value="0" id="d3">
+<input type="range" min="-100" max="100" value="0" step="0.001" id="s3">
+
+<h2>Jerk</h2>
+<input type="number" value="0" id="d4">
+<input type="range" min="-100" max="100" value="0" step="0.001" id="s4">
+
+<h2>Jounce</h2>
+<input type="number" value="0" id="d5">
+<input type="range" min="-100" max="100" value="0" step="0.001" id="s5">
+
+<h2>Hyperjerk</h2>
+<input type="number" value="0" id="d6">
+<input type="range" min="-100" max="100" value="0" step="0.001" id="s6">
+
+<h2>Meta-jounce</h2>
+<input type="number" value="0" id="d7">
+<input type="range" min="-100" max="100" value="0" step="0.001" id="s7">
+
+<h2>Binge warp</h2>
+<input type="number" value="0" id="d8">
+<input type="range" min="-100" max="100" value="0" step="0.001" id="s8">
+
+<h2>Migrational spank</h2>
+<input type="number" value="0" id="d9">
+<input type="range" min="-100" max="100" value="0" step="0.001" id="s9">
+
+<h2>Barflurtch</h2>
+<input type="number" value="0" id="d10">
+<input type="range" min="-100" max="100" value="0" step="0.001" id="s10">
+
+<h2>Dark jaunt</h2>
+<input type="number" value="0" id="d11">
+<input type="range" min="-100" max="100" value="0" step="0.001" id="s11">
+
+<h2>Catastrophic snap</h2>
+<input type="number" value="0" id="d12">
+<input type="range" min="-100" max="100" value="0" step="0.001" id="s12">
+
+<h2>Whipfuck</h2>
+<input type="number" value="0" id="d13">
+<input type="range" min="-100" max="100" value="0" step="0.001" id="s13">
+
+<h2>Newton's torment</h2>
+<input type="number" value="0" id="d14">
+<input type="range" min="-100" max="100" value="0" step="0.001" id="s14">
+
+<script>
+var sliders = [];
+var displays = [];
+var numbers = [];
+var oldnumbers = [];
+
+for(var i=0; i<14; i++) {
+  sliders[i] = document.getElementById("s" + (i+1));
+  displays[i] = document.getElementById("d" + (i+1));
+  numbers[i] = parseFloat(sliders[i].value);
+}
+
+var time = {
+  last: new Date().getTime(),
+  ms: 0
+};
+
+var current = 0;
+
+function draw() {
+  time.ms = new Date().getTime() - time.last;
+
+  /*for(var i=14; i>=0; i--) {
+    if(i < 13) {
+      numbers[i] = numbers[i] + (numbers[i+1] * time.ms/16);
+      sliders[i].value = numbers[i];
+      displays[i].value = numbers[i];
+    }
+  }*/
+
+  for(var i=current-1; i>=0; i--) {
+    numbers[i] += numbers[i+1] * time.ms/16;
+    sliders[i].value = numbers[i];
+    displays[i].value = numbers[i];
+  }
+
+  for(var i=current+1; i<14; i++) {
+    numbers[i] = numbers[i-1] - oldnumbers[i-1];
+    sliders[i].value = numbers[i];
+    displays[i].value = numbers[i];
+  }
+
+  time.last = new Date().getTime();
+
+  for(var i=0; i<numbers.length; i++){
+    oldnumbers[i] = numbers[i];
+  }
+
+  requestAnimationFrame(draw);
+}
+
+for(var i=0; i<numbers.length; i++){
+  oldnumbers[i] = numbers[i];
+}
+
+requestAnimationFrame(draw);
+
+function changed(e) {
+  var curnum = parseFloat(e.target.id.substr(1)) - 1;
+  current = curnum;
+  numbers[curnum] = parseFloat(e.target.value);
+}
+for(var i=0; i<numbers.length; i++) {
+  sliders[i].addEventListener("input", changed);
+  displays[i].addEventListener("input", changed);
+}
+</script>
+
+</body>
+</html>
