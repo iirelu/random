@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+<title>noise</title>
+</head>
+<body>
+<script>
+
+var ctx = new AudioContext();
+var noise = ctx.createScriptProcessor(2048, 1, 1);
+noise.onaudioprocess = function(e) {
+  var output = e.outputBuffer.getChannelData(0);
+  for(var i = 0; i < 2048; i++) {
+    output[i] = Math.random()*2 - 1;
+  }
+}
+var lowpass = ctx.createBiquadFilter();
+
+noise.connect(lowpass);
+lowpass.connect(ctx.destination);
+
+// NO
+// noise.connect(ctx.destination);
+
+</script>
+</body>
+</html>
