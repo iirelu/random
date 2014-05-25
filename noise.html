@@ -4,6 +4,10 @@
 <title>noise</title>
 </head>
 <body>
+
+<p>volume:</p>
+<input type="range" min="0" max="1" value="0.5" step=0.01 id="volume">
+
 <script>
 
 var ctx = new AudioContext();
@@ -15,9 +19,16 @@ noise.onaudioprocess = function(e) {
   }
 }
 var lowpass = ctx.createBiquadFilter();
+var gain = ctx.createGain();
+gain.gain.value = 0.5;
 
 noise.connect(lowpass);
-lowpass.connect(ctx.destination);
+lowpass.connect(gain);
+gain.connect(ctx.destination);
+
+document.getElementById("volume").addEventListener("input", function(e) {
+  gain.gain.value = e.target.value;
+});
 
 // NO
 // noise.connect(ctx.destination);
